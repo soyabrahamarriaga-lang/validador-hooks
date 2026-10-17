@@ -1,0 +1,42 @@
+<h2 class="sr-only">Validación de hook: nivel, qué le falta y propuesta por niveles</h2>
+<style>
+.vh-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.vh-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:0.5px solid var(--border);font-size:14px;line-height:1.5}
+.vh-row:first-child{border-top:0}
+.vh-lbl{font-size:13px;color:var(--text-secondary);margin:0 0 6px}
+.vh-pill{font-size:12px;padding:3px 10px;border-radius:var(--radius);white-space:nowrap}
+</style>
+<div id="vh" style="padding:0.5rem 0"></div>
+<script>
+const D = __DATA__;
+const ok = D.checks.filter(c => c.ok).length;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mark = s => esc(s).replace(/\[DATO:([^\]]*)\]/g, '<span style="background:var(--bg-warning);color:var(--text-warning);padding:0 4px;border-radius:4px">[DATO:$1]</span>');
+document.getElementById('vh').innerHTML = `
+<div class="vh-card">
+  <p class="vh-lbl">Tu hook</p>
+  <p style="font-family:var(--font-voice);font-size:18px;margin:0 0 12px">“${esc(D.hook)}”</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
+    <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem"><p class="vh-lbl">Nivel</p><p style="font-size:24px;font-weight:500;margin:0">${D.nivel} / 5</p></div>
+    <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem"><p class="vh-lbl">Puntaje</p><p style="font-size:24px;font-weight:500;margin:0">${ok} / ${D.checks.length}</p></div>
+  </div>
+</div>
+<div class="vh-card">
+  <p class="vh-lbl">Qué tiene y qué le falta</p>
+  ${D.checks.map(c => `<div class="vh-row">
+    <i class="ti ${c.ok ? 'ti-check' : 'ti-plus'}" aria-hidden="true" style="font-size:18px;color:var(${c.ok ? '--text-success' : '--text-warning'})"></i>
+    <div style="flex:1"><span style="font-weight:500">${esc(c.nombre)}</span><br><span style="color:var(--text-secondary)">${mark(c.nota)}</span></div>
+    <span class="vh-pill" style="background:var(${c.ok ? '--bg-success' : '--bg-warning'});color:var(${c.ok ? '--text-success' : '--text-warning'})">${c.ok ? 'Lo tiene' : 'Agrégale'}</span>
+  </div>`).join('')}
+</div>
+<div class="vh-card">
+  <p class="vh-lbl">Propuesta subiendo nivel por nivel</p>
+  ${D.propuestas.map(p => `<div class="vh-row">
+    <span class="vh-pill" style="background:var(${p.nivel <= D.nivel ? '--surface-1' : '--bg-accent'});color:var(${p.nivel <= D.nivel ? '--text-secondary' : '--text-accent'})">Nivel ${p.nivel}</span>
+    <div style="flex:1"><span style="color:var(--text-secondary);font-size:13px">${esc(p.agrega)}</span><br>${mark(p.texto)}</div>
+    <button aria-label="Copiar" data-t="${esc(p.texto)}" onclick="navigator.clipboard.writeText(this.dataset.t);this.innerHTML='<i class=\\'ti ti-check\\'></i>'"><i class="ti ti-copy" aria-hidden="true"></i></button>
+  </div>`).join('')}
+</div>
+${D.contra ? `<p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px"><i class="ti ti-alert-triangle" aria-hidden="true"></i> En contra: ${esc(D.contra)}</p>` : ''}
+<button onclick="sendPrompt('Dame 3 variantes más del hook en nivel 5')">Más variantes nivel 5 ↗</button>`;
+</script>
