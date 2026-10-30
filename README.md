@@ -59,6 +59,33 @@ Lo que sí: vas a dejar de publicar hooks de nivel 1 sin darte cuenta. Y eso, re
 
 Prueba cada versión con A/B y mira la retención a los 3 segundos. Los datos mandan, no la skill.
 
+## Cómo está armada
+
+| Archivo | Para qué sirve |
+|---|---|
+| `SKILL.md` | Escalera, checklist, regla de nivel, flujo y reglas de respuesta |
+| `plantilla.html` | Interfaz de un hook: nivel, qué le falta y propuestas por nivel |
+| `plantilla-comparar.html` | Original y variaciones en columnas |
+
+No hay código que califique: Claude evalúa el hook con el checklist, arma un JSON y lo mete en la plantilla.
+
+**Puntaje:** 1 punto por nicho, acción, temporalidad, tensión, experiencia y meta medible.
+
+**Nivel:** 5 = tensión + experiencia + meta. 4 = tensión y 4 puntos o más. 3 = 3 puntos o más. 2 = 2 puntos. 1 = 0 o 1.
+
+**Variaciones:** primero valida tu hook, espera tus versiones y las compara en columnas. Sólo propone ángulos si se los pides.
+
+### Formato de datos
+
+```json
+{"titulo": "1 · Original", "hook": "...", "nivel": 3,
+ "checks": [{"nombre": "Nicho", "ok": true, "nota": "por qué"}],
+ "propuestas": [{"nivel": 5, "agrega": "qué sumó", "texto": "..."}],
+ "contra": "argumento en contra"}
+```
+
+`plantilla.html` recibe un objeto. `plantilla-comparar.html` recibe un arreglo y muestra sólo la última propuesta de cada hook. `titulo` es opcional.
+
 ## Instalar
 
 ```bash

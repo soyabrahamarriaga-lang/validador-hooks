@@ -8,11 +8,10 @@
 </style>
 <div id="vh" style="padding:0.5rem 0"></div>
 <script>
-const D = __DATA__;
-const ok = D.checks.filter(c => c.ok).length;
+const ALL = [].concat(__DATA__);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const mark = s => esc(s).replace(/\[DATO:([^\]]*)\]/g, '<span style="background:var(--bg-warning);color:var(--text-warning);padding:0 4px;border-radius:4px">[DATO:$1]</span>');
-document.getElementById('vh').innerHTML = `
+document.getElementById('vh').innerHTML = ALL.map(D => { const ok = D.checks.filter(c => c.ok).length; return `
 <div class="vh-card">
   <p class="vh-lbl">Tu hook</p>
   <p style="font-family:var(--font-voice);font-size:18px;margin:0 0 12px">“${esc(D.hook)}”</p>
@@ -38,5 +37,5 @@ document.getElementById('vh').innerHTML = `
   </div>`).join('')}
 </div>
 ${D.contra ? `<p style="font-size:13px;color:var(--text-secondary);margin:0 0 12px"><i class="ti ti-alert-triangle" aria-hidden="true"></i> En contra: ${esc(D.contra)}</p>` : ''}
-<button onclick="sendPrompt('Dame 3 variantes más del hook en nivel 5')">Más variantes nivel 5 ↗</button>`;
+`; }).join('<hr style="border:0;border-top:0.5px solid var(--border);margin:1.5rem 0">') + `<button onclick="sendPrompt('Dame 3 variantes más del hook en nivel 5')">Más variantes nivel 5 ↗</button>`;
 </script>

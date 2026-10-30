@@ -28,9 +28,26 @@ Fuente: reel de @plantandofloress (Cris), donde la misma idea ("un día conmigo"
 
 Extras (no puntúan, sólo se señalan): ¿la primera frase cabe en ≤3 s / ~12 palabras? ¿el texto en pantalla refuerza el hook? ¿el video cumple lo que promete? (clickbait que no cumple = baja retención).
 
+## Regla de nivel
+
+El nivel sale del checklist, en este orden (el primero que se cumpla):
+
+- **5:** tiene tensión, experiencia y meta.
+- **4:** tiene tensión y al menos 4 puntos en total.
+- **3:** tiene 3 puntos o más.
+- **2:** tiene 2 puntos.
+- **1:** tiene 0 o 1.
+
+## Flujo con variaciones
+
+1. Hook nuevo: valida sólo ése con `plantilla.html`. No propongas ángulos.
+2. Espera las variaciones del usuario. Si manda un complemento del original, júntalo y revalida como un solo hook.
+3. Compara original y variaciones en columnas con `plantilla-comparar.html`, con el original como 1.
+4. Propón un ángulo propio sólo si lo pide.
+
 ## Cómo responder
 
-**Siempre muestra la interfaz**: lee `plantilla.html` (junto a este archivo), reemplaza `__DATA__` por un objeto JSON y pásalo a `show_widget` (llama antes a `read_me` con `interactive` si no lo hiciste en la sesión). Si `show_widget` no existe, da lo mismo como tabla en markdown.
+**Siempre muestra la interfaz**: lee `plantilla.html` (junto a este archivo), reemplaza `__DATA__` por un objeto JSON. Para comparar varios hooks (original + variaciones) usa `plantilla-comparar.html` con un arreglo de esos objetos (más `"titulo"`, p. ej. "Original", "Variación 2"); los muestra en columnas y pásalo a `show_widget` (llama antes a `read_me` con `interactive` si no lo hiciste en la sesión). Si `show_widget` no existe, da lo mismo como tabla en markdown.
 
 ```json
 {"hook":"...","nivel":2,

@@ -1,0 +1,25 @@
+<h2 class="sr-only">Comparación de hooks en columnas: nivel, puntaje, checklist y propuesta</h2>
+<style>
+.vc{width:100%;table-layout:fixed;border-collapse:collapse;font-size:13px;line-height:1.5}
+.vc th,.vc td{border-top:0.5px solid var(--border);padding:8px;vertical-align:top;text-align:left}
+.vc th{font-weight:500;font-family:var(--font-voice);font-size:14px}
+.vc td:first-child,.vc th:first-child{width:96px;color:var(--text-secondary)}
+.vc .n{color:var(--text-secondary)}
+</style>
+<div id="vc" style="padding:0.5rem 0;overflow-x:auto"></div>
+<script>
+const ALL = __DATA__;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mark = s => esc(s).replace(/\[DATO:([^\]]*)\]/g, '<span style="background:var(--bg-warning);color:var(--text-warning);padding:0 3px;border-radius:4px">[DATO:$1]</span>');
+const best = Math.max(...ALL.map(D => D.checks.filter(c => c.ok).length));
+const row = (lbl, f) => `<tr><td>${lbl}</td>${ALL.map(D => `<td>${f(D)}</td>`).join('')}</tr>`;
+const big = v => `<span style="font-size:20px;font-weight:500">${v}</span>`;
+document.getElementById('vc').innerHTML = `<table class="vc">
+<tr><th></th>${ALL.map((D, i) => `<th><span style="font-family:var(--font-sans);font-size:12px;color:var(--text-secondary)">${esc(D.titulo || 'Hook ' + (i + 1))}</span><br>“${mark(D.hook)}”</th>`).join('')}</tr>
+${row('Nivel', D => big(D.nivel + ' / 5'))}
+${row('Puntaje', D => { const ok = D.checks.filter(c => c.ok).length; return big(ok + ' / ' + D.checks.length) + (ok === best ? ' <span style="font-size:12px;background:var(--bg-success);color:var(--text-success);padding:2px 8px;border-radius:var(--radius)">Mejor</span>' : ''); })}
+${ALL[0].checks.map((c0, k) => row(esc(c0.nombre), D => { const c = D.checks[k]; return `<i class="ti ${c.ok ? 'ti-check' : 'ti-plus'}" aria-hidden="true" style="color:var(${c.ok ? '--text-success' : '--text-warning'})"></i> <span class="n">${mark(c.nota)}</span>`; })).join('')}
+${row('Nivel 5', D => { const p = D.propuestas[D.propuestas.length - 1]; return `${mark(p.texto)} <button aria-label="Copiar" style="margin-top:4px" data-t="${esc(p.texto)}" onclick="navigator.clipboard.writeText(this.dataset.t);this.innerHTML='<i class=\\'ti ti-check\\'></i>'"><i class="ti ti-copy" aria-hidden="true"></i></button>`; })}
+${row('En contra', D => `<span class="n">${esc(D.contra || '')}</span>`)}
+</table>`;
+</script>
